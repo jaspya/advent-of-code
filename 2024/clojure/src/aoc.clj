@@ -1,5 +1,8 @@
 (ns aoc
-  (:require [clojure.java.io :as io]))
+  #_{:clj-kondo/ignore [:unused-namespace]}
+  (:require
+   [clojure.java.io :as io]
+   [pez.baldr :as sut]))
 
 (defn read-lines
   [path]

@@ -1,3 +1,11 @@
-{:paths ["src"]
+{:paths ["src" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
-        criterium/criterium {:mvn/version "0.4.6"}}}
+        criterium/criterium {:mvn/version "0.4.6"}
+        pez/baldr {:git/url "https://github.com/PEZ/baldr"
+                   :sha "83ba18279b22ff5680fe8fd9be02933d6d05b5d3"}}
+ :aliases {:test {:extra-deps {io.github.cognitect-labs/test-runner
+                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                  :main-opts ["-m" "cognitect.test-runner"]
+                  :exec-fn cognitect.test-runner.api/test
+                  :exec-args {:dirs ["src"]
+                              :patterns ["day\\d{1,2}"]}}}}

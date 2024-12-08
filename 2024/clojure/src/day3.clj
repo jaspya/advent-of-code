@@ -1,15 +1,17 @@
-(ns day3)
+(ns day3
+  (:require
+   [clojure.test :refer [deftest is]]))
 
-(comment
-  ;; Part 1
-  (->> (slurp "resources/aoc2024/day3.input")
+(defn part1
+  [input]
+  (->> (slurp input)
        (re-seq #"mul\((\d{1,3}),(\d{1,3})\)")
        (map (comp #(apply * %) #(map parse-long %) rest))
        (reduce +)))
 
-(comment
-  ;; Part 2
-  (->> (slurp "resources/aoc2024/day3.input")
+(defn part2
+  [input]
+  (->> (slurp input)
        (re-seq #"mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don\'t\(\)")
        (reduce (fn [acc [instruction a b]]
                  (cond
@@ -19,3 +21,9 @@
                    :else acc))
                {:val 0 :enabled true})
        :val))
+
+(deftest mull-it-over
+  (is (= 192767529 (part1 "resources/day3.input"))
+      "Part 1: What do you get if you add up all of the results of the multiplications?")
+  (is (= 104083373 (part2 "resources/day3.input"))
+      "Part 2: What do you get if you add up all of the results of just the enabled multiplications?"))

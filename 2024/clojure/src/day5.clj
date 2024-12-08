@@ -1,8 +1,9 @@
 (ns day5
   (:require
-   [aoc :refer [read-lines sum]]
+   [aoc :refer [read-lines]]
    [clojure.set :as set]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [clojure.test :refer [deftest is]]))
 
 (defn parse-data
   [path]
@@ -17,25 +18,6 @@
                      acc)))
                {:rules {}
                 :updates []})))
-
-(comment
-  ;; Part 1 - 6051
-  ;; Initial solution using blocklist
-  (let [{:keys [rules updates]} (parse-data "resources/aoc2024/day5.input")]
-    (->> updates
-         (keep (fn [current]
-                 (let [valid (-> (reduce (fn [acc itm]
-                                           (if (:valid acc)
-                                             (if (contains? (:blocklist acc) itm)
-                                               {:valid false}
-                                               (update acc :blocklist set/union (get rules itm)))
-                                             acc))
-                                         {:blocklist #{}
-                                          :valid true}
-                                         current)
-                                 :valid)]
-                   (when valid (get current (quot (count current) 2))))))
-         (reduce +))))
 
 (defn insert-or-swap
   [a lookup [x & rest]]
@@ -53,19 +35,42 @@
     (when (= xs ordered)
       (get (vec ordered) (quot (count ordered) 2)))))
 
-(comment
-  ;; Part 1 - 6051
-  ;; Use recursion
-  (let [{:keys [rules updates]} (parse-data "resources/aoc2024/day5.input")]
-    (sum (keep #(find-valid-score rules %) updates))))
-
 (defn find-invalid-score
   [rules xs]
   (let [ordered (reduce #(insert-or-swap %2 rules %1) [(first xs)] (rest xs))]
     (when (not= xs ordered)
       (get (vec ordered) (quot (count ordered) 2)))))
 
+(defn part1
+  [input]
+  (let [{:keys [rules updates]} (parse-data input)]
+    (reduce + (keep #(find-valid-score rules %) updates))))
+
+(defn part2
+  [input]
+  (let [{:keys [rules updates]} (parse-data input)]
+    (reduce + (keep #(find-invalid-score rules %) updates))))
+
+(deftest print-queue
+  (is (= 6051 (part1 "resources/day5.input"))
+      "Part 1: What do you get if you add up the middle page number from those correctly-ordered updates?")
+  (is (= 5093 (part2 "resources/day5.input"))
+      "Part 2: What do you get if you add up the middle page numbers after correctly ordering just those updates?"))
+
 (comment
-  ;; Part 2 - 5093
+  ;; Part 1: Initial solution using blocklist
   (let [{:keys [rules updates]} (parse-data "resources/aoc2024/day5.input")]
-    (sum (keep #(find-invalid-score rules %) updates))))
+    (->> updates
+         (keep (fn [current]
+                 (let [valid (-> (reduce (fn [acc itm]
+                                           (if (:valid acc)
+                                             (if (contains? (:blocklist acc) itm)
+                                               {:valid false}
+                                               (update acc :blocklist set/union (get rules itm)))
+                                             acc))
+                                         {:blocklist #{}
+                                          :valid true}
+                                         current)
+                                 :valid)]
+                   (when valid (get current (quot (count current) 2))))))
+         (reduce +))))

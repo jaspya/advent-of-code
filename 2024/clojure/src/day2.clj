@@ -1,6 +1,8 @@
 (ns day2
-  (:require [aoc :refer [read-lines remove-at-index]]
-            [clojure.string :as str]))
+  (:require
+   [aoc :refer [read-lines remove-at-index]]
+   [clojure.string :as str]
+   [clojure.test :refer [deftest is]]))
 
 (defn parse-data
   [path]
@@ -16,11 +18,29 @@
          (every? #(<= 1 (abs (- (first %) (last %))) 3)
                  (partition 2 1 report)))))
 
-(comment
-  ;; Part 1
-  (->> (parse-data "resources/aoc2024/day2.input")
+(defn part1
+  [input]
+  (->> (parse-data input)
        (filter safe-report?)
        count))
+
+(defn safe-report-with-dampener?
+  [report]
+  (or (safe-report? report)
+      (->> (range (count report))
+           (some #(safe-report? (remove-at-index report %))))))
+
+(defn part2
+  [input]
+  (->> (parse-data input)
+       (filter safe-report-with-dampener?)
+       count))
+
+(deftest red-nosed-reports
+  (is (= 564 (part1 "resources/day2.input"))
+      "Part 1: How many reports are safe?")
+  (is (= 604 (part2 "resources/day2.input"))
+      "Part 2: How many reports are now safe?"))
 
 ;; (defn safe-report-with-dampener?
 ;;   [[first-level second-level third-level :as report]]
@@ -45,15 +65,3 @@
 ;;                :skipped nil}
 ;;               (rest report))
 ;;       :safe))
-
-(defn safe-report-with-dampener?
-  [report]
-  (or (safe-report? report)
-      (->> (range (count report))
-           (some #(safe-report? (remove-at-index report %))))))
-
-(comment
-  ;; Part 2
-  (->> (parse-data "resources/aoc2024/day2.input")
-       (filter safe-report-with-dampener?)
-       count))

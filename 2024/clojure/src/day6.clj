@@ -1,7 +1,8 @@
 (ns day6
   (:require
    [aoc :refer [read-lines]]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [clojure.test :refer [deftest is]]))
 
 (defn parse-data
   [path]
@@ -43,49 +44,58 @@
       (recur (apply do-move local-state))
       local-state)))
 
-(comment
-  ;; Part 1 - 4602
-  (time (let [board (->> (parse-data "resources/aoc2024/day6.input")
-                         (mapv vec))]
-          (->> (do-move board [79 87] "N" #{})
-               move-to-complete
-               (map #(apply str %))
-               str/join
-               (re-seq #"X")
-               count))))
+(defn part1
+  [input]
+  (let [board (->> (parse-data input)
+                   (mapv vec))]
+    (->> (do-move board [79 87] "N" #{})
+         move-to-complete
+         (map #(apply str %))
+         str/join
+         (re-seq #"X")
+         count)))
+
+;; (defn part2
+;;   [input])
+
+(deftest guard-gallivant
+  (is (= 4602 (part1 "resources/day6.input"))
+      "Part 1: How many distinct positions will the guard visit before leaving the mapped area?"))
+  ;; (is (= 1703 (part2 "resources/day6.input"))
+  ;;     "Part 2: How many different positions could you choose for this obstruction?")
 
 (comment
-  ;; [6 4]
   ;; Part 2 - 1703
   ;; Time: 59.13 sec
   (time
-   (let [board (->> (parse-data "resources/aoc2024/day6.input")
-                    (mapv vec))]
-     (->> (for [y (range (count board))]
-            (for [x (range (count (first board)))]
-              (let [bboard (update-in board [y x] (fn [c]
-                                                    (if (= c \.)
-                                                      \#
-                                                      c)))]
-                (nil? (move-to-complete (do-move bboard [79 87] "N" #{}))))))
-          flatten
-          (remove false?)
-          count))))
-
-(comment
-  ;; Time: 45.25 sec
-  (time
-   (let [board (->> (parse-data "resources/aoc2024/day6.input")
-                    (mapv vec))]
-     (->> (for [y (range (count board))]
-            (pmap
-             (fn [x]
+    (let [board (->> (parse-data "resources/aoc2024/day6.input")
+                     (mapv vec))]
+      (->> (for [y (range (count board))]
+             (for [x (range (count (first board)))]
                (let [bboard (update-in board [y x] (fn [c]
                                                      (if (= c \.)
                                                        \#
                                                        c)))]
-                 (nil? (move-to-complete (do-move bboard [79 87] "N" #{})))))
-             (range (count (first board)))))
-          flatten
-          (remove false?)
-          count))))
+                 (nil? (move-to-complete (do-move bboard [79 87] "N" #{}))))))
+           flatten
+           (remove false?)
+           count))))
+
+(comment
+  ;; Part 2 - try 2 - 1703
+  ;; Time: 45.25 sec
+  (time
+    (let [board (->> (parse-data "resources/aoc2024/day6.input")
+                     (mapv vec))]
+      (->> (for [y (range (count board))]
+             (pmap
+               (fn [x]
+                 (let [bboard (update-in board [y x] (fn [c]
+                                                       (if (= c \.)
+                                                         \#
+                                                         c)))]
+                   (nil? (move-to-complete (do-move bboard [79 87] "N" #{})))))
+               (range (count (first board)))))
+           flatten
+           (remove false?)
+           count))))
