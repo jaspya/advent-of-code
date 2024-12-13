@@ -87,7 +87,7 @@
   ;; Part 2 - try 2 - 1703
   ;; Time: 45.25 sec
   (time
-    (let [board (->> (parse-data "resources/aoc2024/day6.input")
+    (let [board (->> (parse-data "resources/day6.input")
                      (mapv vec))]
       (->> (for [y (range (count board))]
              (pmap
