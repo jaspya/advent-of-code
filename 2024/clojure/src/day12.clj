@@ -73,9 +73,9 @@
 (defn count-increasing
   [xs]
   (-> (reduce (fn [[current-count last] next]
-                [(if (not= (inc last) next) 
-                   (inc current-count) 
-                   current-count) 
+                [(if (not= (inc last) next)
+                   (inc current-count)
+                   current-count)
                  next])
               [1 (first xs)]
               (rest xs))
@@ -112,7 +112,7 @@
 
   (def directions
     [[-1 0] [0 1] [1 0] [0 -1]])
-  
+
   (defn maybe
     [board type location]
     (loop [position location
@@ -127,5 +127,4 @@
             peri (- (count next) (count fnext))]
         (if (seq locations)
           (recur (first locations) (rest locations) (set/union checked (set fnext)) (inc area) (+ perimeter peri))
-          [(inc area) (+ perimeter peri) checked]))))
-  )
+          [(inc area) (+ perimeter peri) checked])))))

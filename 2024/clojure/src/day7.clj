@@ -32,8 +32,8 @@
 (defn solve
   [input remainder-fn]
   (->> (parse-data input)
-       (keep (fn [[target & xs]] 
-               (when (calculate-backwards remainder-fn target (reverse xs)) 
+       (keep (fn [[target & xs]]
+               (when (calculate-backwards remainder-fn target (reverse xs))
                  target)))
        (reduce +)))
 

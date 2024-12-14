@@ -70,34 +70,34 @@
   ;; Part 2 - 1703
   ;; Time: 59.13 sec
   (time
-    (let [board (->> (parse-data "resources/aoc2024/day6.input")
-                     (mapv vec))]
-      (->> (for [y (range (count board))]
-             (for [x (range (count (first board)))]
-               (let [bboard (update-in board [y x] (fn [c]
-                                                     (if (= c \.)
-                                                       \#
-                                                       c)))]
-                 (nil? (move-to-complete (do-move bboard [79 87] "N" #{}))))))
-           flatten
-           (remove false?)
-           count))))
+   (let [board (->> (parse-data "resources/aoc2024/day6.input")
+                    (mapv vec))]
+     (->> (for [y (range (count board))]
+            (for [x (range (count (first board)))]
+              (let [bboard (update-in board [y x] (fn [c]
+                                                    (if (= c \.)
+                                                      \#
+                                                      c)))]
+                (nil? (move-to-complete (do-move bboard [79 87] "N" #{}))))))
+          flatten
+          (remove false?)
+          count))))
 
 (comment
   ;; Part 2 - try 2 - 1703
   ;; Time: 45.25 sec
   (time
-    (let [board (->> (parse-data "resources/day6.input")
-                     (mapv vec))]
-      (->> (for [y (range (count board))]
-             (pmap
-               (fn [x]
-                 (let [bboard (update-in board [y x] (fn [c]
-                                                       (if (= c \.)
-                                                         \#
-                                                         c)))]
-                   (nil? (move-to-complete (do-move bboard [79 87] "N" #{})))))
-               (range (count (first board)))))
-           flatten
-           (remove false?)
-           count))))
+   (let [board (->> (parse-data "resources/day6.input")
+                    (mapv vec))]
+     (->> (for [y (range (count board))]
+            (pmap
+             (fn [x]
+               (let [bboard (update-in board [y x] (fn [c]
+                                                     (if (= c \.)
+                                                       \#
+                                                       c)))]
+                 (nil? (move-to-complete (do-move bboard [79 87] "N" #{})))))
+             (range (count (first board)))))
+          flatten
+          (remove false?)
+          count))))

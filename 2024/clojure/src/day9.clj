@@ -93,7 +93,7 @@
   (is (= 1 1)
       "Part 2: TOO SLOW! @ 4.99 sec")
   #_(is (= 6361380647183 (part2 "resources/day9.input"))
-      "Part 2: What is the resulting filesystem checksum?"))
+        "Part 2: What is the resulting filesystem checksum?"))
 
 (comment
   (c/quick-bench (part1 "resources/day9.input")) ;; 80.87 ms
