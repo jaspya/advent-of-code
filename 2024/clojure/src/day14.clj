@@ -48,18 +48,6 @@
     [idx]
     (move-robots 101 103 idx data)))
 
-(comment
-  ;; Data artefact at every 101 frames starting at frame 28
-  ;; Found Christmas tree at 75th data artefact
-  ;; So 28 + 75 * 101 = 7603
-  (data-viz/start)
-  (data-viz/draw data-fn {:grid-rows 103
-                          :grid-cols 101
-                          :panel-cols 12
-                          :panel-count 76
-                          :start-index 28
-                          :step-count 101}))
-
 (defn part2
   [_input]
   (+ 28 (* 101 75)))
@@ -102,4 +90,36 @@
          vals
          (reduce *))))
 
-
+(comment
+  ;; Data artefact at every 101 frames starting at frame 28
+  ;; Found Christmas tree at 75th data artefact
+  ;; So 28 + 75 * 101 = 7603
+  (data-viz/start)
+  (data-viz/draw data-fn {:grid-rows 103
+                          :grid-cols 101
+                          :panel-cols 3
+                          :panel-rows 2
+                          :panel-max 1
+                          :start-index 0
+                          :step-count 1
+                          :as-board false
+                          :as-points false
+                          :colors {}})
+  (data-viz/draw data-fn {:grid-rows 103
+                          :grid-cols 101
+                          :panel-cols 20
+                          :panel-rows 12
+                          :start-index 0
+                          :step-count 1
+                          :as-board false
+                          :as-points false
+                          :colors {}})
+  (data-viz/draw data-fn {:grid-rows 103
+                          :grid-cols 101
+                          :panel-cols 20
+                          :panel-rows 12
+                          :start-index 28
+                          :step-count 101
+                          :as-board false
+                          :as-points false
+                          :colors {}}))
