@@ -19,12 +19,14 @@
   (when (str/starts-with? part pattern) (count pattern)))
 
 (defn count-combinations
-  [patterns design]
+  [pattern-map design]
   (loop [current 0
          next-indexes #{}
          index-counts {0 1}]
     (let [part (subs design current)
-          new-set (set (map (partial + current) (keep (partial pattern-count part) patterns)))]
+          patterns (get pattern-map (first part))
+          counts (keep (partial pattern-count part) patterns)
+          new-set (set (map (partial + current) counts))]
       (if (= part "")
         (get index-counts current)
         (if-let [[next & indexes] (seq (sort (set/union next-indexes new-set)))]
@@ -34,8 +36,9 @@
 (defn find-combinations
   [input]
   (let [lines (str/split-lines (slurp input))
-        patterns (set (str/split (first lines) #", "))]
-    (pmap (partial count-combinations patterns) (drop 2 lines))))
+        pattern-map (-> (group-by first (str/split (first lines) #", "))
+                        (update-vals set))]
+    (pmap (partial count-combinations pattern-map) (drop 2 lines))))
 
 (defn part1 
   [input]
@@ -54,5 +57,5 @@
       "Part 2: What do you get if you add up the number of different ways you could make each design?"))
 
 (comment
-  (c/quick-bench (part1 "resources/day19.input")) ;; 156 ms
-  (c/quick-bench (part2 "resources/day19.input"))) ;; 147 ms
+  (c/quick-bench (part1 "resources/day19.input")) ;; 29.9 ms
+  (c/quick-bench (part2 "resources/day19.input"))) ;; 30.9 ms
