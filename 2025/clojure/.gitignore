@@ -22,5 +22,6 @@ pom.xml.asc
 .lsp/.cache
 .clj-kondo/.cache
 
+resources/*.example
 resources/*.input
 example
