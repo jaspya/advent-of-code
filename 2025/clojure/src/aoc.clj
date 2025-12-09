@@ -1,11 +1,11 @@
 (ns aoc
   #_{:clj-kondo/ignore [:unused-namespace]}
-  (:require
-   [clojure.java.io :as io]
-   [clojure.math :as math]
-   [pez.baldr :as sut])
-  (:import
-   [java.util BitSet HashMap PriorityQueue]))
+  (:require [clojure.java.io :as io]
+            [clojure.math :as math]
+            [pez.baldr :as sut])
+  (:import [java.awt Polygon]
+           [java.awt.geom Point2D$Double Rectangle2D$Double]
+           [java.util BitSet HashMap PriorityQueue]))
 
 (defn read-lines
   [path]
@@ -42,6 +42,10 @@
 (defn distance
   [[y1 x1] [y2 x2]]
   (math/sqrt (+ (squared-deviation y1 y2) (squared-deviation x1 x2))))
+
+(defn distance-3d
+  [[y1 x1 z1] [y2 x2 z2]]
+  (math/sqrt (+ (squared-deviation y1 y2) (squared-deviation x1 x2) (squared-deviation z1 z2))))
 
 (defrecord NodeCost [node cost]
   Comparable
@@ -88,3 +92,16 @@
   [graph start end]
   (-> (dijkstra-distances graph start end)
       (reconstruct-shortest-path start end)))
+
+(defn area
+  [[x1 y1] [x2 y2]]
+  (* (inc (abs (- x2 x1))) (inc (abs (- y2 y1)))))
+
+(defn ->rectangle
+  [[x1 y1] [x2 y2]]
+  (doto (Rectangle2D$Double.)
+    (.setFrameFromDiagonal (Point2D$Double. x1 y1) (Point2D$Double. x2 y2))))
+
+(defn ->polygon
+  [pts]
+  (Polygon. (int-array (map first pts)) (int-array (map last pts)) (count pts)))
